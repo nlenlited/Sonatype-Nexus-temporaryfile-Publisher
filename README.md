@@ -18,7 +18,7 @@ Configure the variables in the script to fit your needs (e.g. nexus url etc.)
 ## Usage
 you can use this tool with Maven (which will publish some additional md5 hashes) or curl (raw upload paths).
 
-tool <Nexus Username> <Nexus Password> <Path to file to be uploaded> <artifact name> <-c curl flag | -d delete curl flag>
+tool < Nexus Username > < Nexus Password > < Path to file to be uploaded > < artifact name > < -c curl flag | -d delete curl flag >
 Append -c at the end to force the tool to use curl instead of Maven.
 Append -d at the end to force the tool to make curl delete a file (you published with -c)
 
