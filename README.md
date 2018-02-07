@@ -9,8 +9,11 @@ A small shell script to help you push temporary files to your Nexus Server.
 ## Setting up your Nexus
 - Create a new Maven2 Repo with an appropiate name and Allow Re-Deploys (e.g. temp)
 - Create a Scheduled task that removes releases from a repository to clean up the uploaded files. (e.g. Daily)
-Note: the scheduled task will not delete raw uploads which where uploaded in curl mode. You can use the -d flag of this tool to help you delete it. (Or just use the web interface)
-- Protip: Be sure to create a username and password combo that are used specific for this repo, to isolate and prevent security leaks ( e.g. Prevent leaking a script that uses a user with elevated rights over other repos as the temp repo OR leaving traces of an elevated username/password on a machine where you download the temporary files, leaving your nexus vurnable for outsiders.)
+<aside class="notice">Note: the scheduled task will not delete raw uploads which where uploaded in curl mode. You can use the -d flag of this tool to help you delete it. (Or just use the web interface)</aside>
+
+<aside class="warning">
+Protip: Be sure to create a username and password combo that are used specific for this repo, to isolate and prevent security leaks ( e.g. Prevent leaking a script that uses a user with elevated rights over other repos as the temp repo OR leaving traces of an elevated username/password on a machine where you download the temporary files, leaving your nexus vurnable for outsiders.)
+ </aside>
 
 ## Configure the script
 Configure the variables in the script to fit your needs (e.g. nexus url etc.)
