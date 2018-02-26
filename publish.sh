@@ -3,7 +3,7 @@
 # Static variables
 #
 #export NEXUS_PORT=80
-export NEXUS_REPO_URL=repository.yourcompany.com/content/repositories/
+export NEXUS_REPO_URL=repository.company.com/content/repositories/
 export NEXUS_REPO_NAME=temp
 export NEXUS_REPO_GROUP=temporary
 export ARTIFACT_VERSION=tmp
@@ -13,9 +13,10 @@ export ARTIFACT_VERSION=tmp
 if [ $# -eq 0 ]
   then
     echo "Simple Nexus Publisher Tool"
-    echo "usage: tool <Nexus Username> <Nexus Password> <Path to file to be uploaded> <artifact name> <-c curl flag | -d delete curl flag>"
+    echo "usage: tool <Nexus Username> <Nexus Password> <Path to file to be uploaded> <artifact name> <-c curl flag | -ct selfdestruct flag | -d delete curl flag> <self destruct timeout (ct flag)>"
     echo "Append -c at the end to force the tool to use curl instead of Maven."
     echo "Append -d at the end to force the tool to make curl delete a file (you published with -c)"
+    echo "Append -ct at the end to force the tool to use curl and self destruct the file within x seconds"
     echo "Requires ; mvn and curl"
     exit 0
 fi
@@ -75,6 +76,10 @@ if [ "$5" == "-d" ]; then
     echo "Using curl as tool to delete a file"
     export TOOL="delcurl"
 fi
+if [ "$5" == "-ct" ]; then 
+    echo "Using curl to upload and self destruct a file after x seconds"
+    export TOOL="sdcurl"
+fi
 #
 # Use maven to deploy the file.
 #
@@ -93,3 +98,18 @@ if [ "$TOOL" == "delcurl" ]; then
   extension="${FILE_PATH##*.}"
   curl -v -X "DELETE" -u $NEXUS_USER:$NEXUS_PASSWORD --url $NEXUS_REPO_URL$NEXUS_REPO_NAME/$ARTIFACT_NAME.$extension
 fi
+if [ "$TOOL" == "sdcurl" ]; then
+  if [ -z "$6" ]
+  then
+    echo "No selfdestruction time given."
+    exit 1
+  fi
+  echo "Going to UPLOAD AND SELFDESTRUCT file $ARTIFACT_NAME.$extension on the nexus."
+  extension="${FILE_PATH##*.}"
+  curl -k -T $FILE_PATH -u $NEXUS_USER:$NEXUS_PASSWORD -v --url $NEXUS_REPO_URL$NEXUS_REPO_NAME/$ARTIFACT_NAME.$extension
+  echo "URL to file: $NEXUS_REPO_URL$NEXUS_REPO_NAME/$ARTIFACT_NAME.$extension" 
+  echo "Going to DELETE THE FILE after $6 seconds.. --- PLEASE LEAVE THIS WINDOW OPEN ---"
+  sleep $6
+  curl -v -X "DELETE" -u $NEXUS_USER:$NEXUS_PASSWORD --url $NEXUS_REPO_URL$NEXUS_REPO_NAME/$ARTIFACT_NAME.$extension
+fi
+

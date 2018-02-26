@@ -1,6 +1,17 @@
 # Sonatype-Nexus-temporaryfile-Publisher
 A small shell script to help you push temporary files to your Nexus Server.
 
+Can be used to:
+- Upload files to your Nexus server using Maven
+- Upload files to your Nexus using Curl
+- Deleting files on your Nexus using Curl (which have been uploaded with curl mode)
+- Uploading a file that will self destruct in x seconds*.
+
+
+* This is done client side, thus requires you to leave the shell open.
+
+- Note: Curl Mode only compatible with Nexus 2 -
+
 ## Requirements:
 - A Sonatype Nexus Server.
 - mvn
@@ -21,7 +32,7 @@ Configure the variables in the script to fit your needs (e.g. nexus url etc.)
 ## Usage
 you can use this tool with Maven (which will publish some additional md5 hashes) or curl (raw upload paths).
 ```
-tool < Nexus Username > < Nexus Password > < Path to file to be uploaded > < artifact name > < -c curl flag | -d delete curl flag >
+tool < Nexus Username > < Nexus Password > < Path to file to be uploaded > < artifact name > < -c curl flag | -ct temporary curl upload flag | -d delete curl flag >
 ```
 Append -c at the end to force the tool to use curl instead of Maven.
 Append -d at the end to force the tool to make curl delete a file (you published with -c)
@@ -36,7 +47,12 @@ publish.sh username password ~/Downloads/developer-calls-it-done-meme.png test
 publish.sh username password ~/Downloads/developer-calls-it-done-meme.png test -c
 ```
 
-### Example: Deleting a file in Maven Mode;
+### Example: Deleting a file in Curl Mode;
 ```
 publish.sh username password ~/Downloads/developer-calls-it-done-meme.png test -d
 ```
+## Example: Temporarily upload and selfdestruct a file in x Seconds using Curl Mode
+```
+publish.sh username password ~/Downloads/developer-calls-it-done-meme.png test -ct 5
+```
+
