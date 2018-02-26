@@ -3,14 +3,13 @@ A small shell script to help you push temporary files to your Nexus Server.
 
 Can be used to:
 - Upload files to your Nexus server using Maven
-- Upload files to your Nexus using Curl
-- Deleting files on your Nexus using Curl (which have been uploaded with curl mode)
-- Uploading a file that will self destruct in x seconds*.
+- Upload files to your Nexus using Curl¹
+- Deleting files on your Nexus using Curl (which have been uploaded with curl mode)¹
+- Uploading a file that will self destruct in x seconds².
 
 
-* This is done client side, thus requires you to leave the shell open.
-
-- Note: Curl Mode only compatible with Nexus 2 -
+_¹ Curl Mode only compatible with Nexus 2_
+_² This is done client side, thus requires you to leave the shell open._
 
 ## Requirements:
 - A Sonatype Nexus Server.
@@ -32,10 +31,11 @@ Configure the variables in the script to fit your needs (e.g. nexus url etc.)
 ## Usage
 you can use this tool with Maven (which will publish some additional md5 hashes) or curl (raw upload paths).
 ```
-tool < Nexus Username > < Nexus Password > < Path to file to be uploaded > < artifact name > < -c curl flag | -ct temporary curl upload flag | -d delete curl flag >
+tool < Nexus Username > < Nexus Password > < Path to file to be uploaded > < artifact name > < -c curl flag | -ct temporary curl upload flag | -d delete curl flag > <self destruct timeout in seconds (when using ct flag)>
 ```
 Append -c at the end to force the tool to use curl instead of Maven.
 Append -d at the end to force the tool to make curl delete a file (you published with -c)
+Append -ct at the end to force the tool to use curl and self destruct the file within x seconds
 
 ### Example: Uploading a file in Maven Mode;
 ```
@@ -51,7 +51,7 @@ publish.sh username password ~/Downloads/developer-calls-it-done-meme.png test -
 ```
 publish.sh username password ~/Downloads/developer-calls-it-done-meme.png test -d
 ```
-## Example: Temporarily upload and selfdestruct a file in x Seconds using Curl Mode
+### Example: Temporarily upload and selfdestruct a file in x seconds using Curl mode
 ```
 publish.sh username password ~/Downloads/developer-calls-it-done-meme.png test -ct 5
 ```
